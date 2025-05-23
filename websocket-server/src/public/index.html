@@ -242,6 +242,15 @@
                         <p class="green-text">
                           Pump ON - Cycle <span id="currentCycle">--</span> of
                           <span id="totalCycles">--</span>
+                          <span
+                            id="timeLeft"
+                            style="
+                              color: #0c528b;
+                              font-weight: 500;
+                              margin-left: 8px;
+                            "
+                            >--</span
+                          >
                         </p>
                       </div>
                       <!-- When interval is completed -->
@@ -608,6 +617,44 @@
           pumpCompletedStatus.style.display = "block";
           document.getElementById("pumpCompletedStatusText").textContent =
             "Completed!";
+        } else if (data.status === "interval_started") {
+          pumpOffStatus.style.display = "none";
+          pumpOnStatus.style.display = "block";
+          pumpCompletedStatus.style.display = "none";
+
+          // Clear any previous timer
+          if (window.onTimeTimer) {
+            clearInterval(window.onTimeTimer);
+          }
+
+          let timeLeft = data.onTime || 0;
+
+          function updateOnTimeDisplay() {
+            const hours = Math.floor(timeLeft / 3600);
+            const minutes = Math.floor((timeLeft % 3600) / 60);
+            const seconds = timeLeft % 60;
+            let display;
+            if (hours > 0) {
+              display = `${hours.toString().padStart(2, "0")}:${minutes
+                .toString()
+                .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+            } else {
+              display = `${minutes.toString().padStart(2, "0")}:${seconds
+                .toString()
+                .padStart(2, "0")}`;
+            }
+            document.getElementById(
+              "timeLeft"
+            ).textContent = `TimeOn[${display}]`;
+            if (timeLeft > 0) {
+              timeLeft--;
+            } else {
+              clearInterval(window.onTimeTimer);
+            }
+          }
+
+          updateOnTimeDisplay();
+          window.onTimeTimer = setInterval(updateOnTimeDisplay, 1000);
         } else if (data.status === "interval_stopped") {
           pumpOffStatus.style.display = "none";
           pumpOnStatus.style.display = "none";
