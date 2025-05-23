@@ -2,14 +2,8 @@
 <html>
   <head>
     <title>WebSocket Control Panel</title>
-    <link
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet"
-    />
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
-      rel="stylesheet"
-    />
+    <link href="libs/material-icons.css" rel="stylesheet" />
+    <link href="libs/materialize.min.css" rel="stylesheet" />
     <style>
       body {
         padding: 20px;
@@ -102,13 +96,13 @@
       /* Add this to your existing styles */
       .pump-interval-status {
         background-color: #f5f5f5;
-        padding: 15px;
+        padding: 4px;
         border-radius: 4px;
         margin-bottom: 20px;
       }
 
       .pump-interval-status p {
-        margin: 5px 0;
+        margin: 2px 0;
       }
 
       .pump-interval-status span {
@@ -262,7 +256,7 @@
               <div class="row">
                 <div class="input-field col s12 m4">
                   <input id="cycleTime" type="number" min="0" />
-                  <label for="cycleTime">Cycle Time (seconds)</label>
+                  <label for="cycleTime">Cycle Time</label>
                 </div>
                 <div class="input-field col s12 m4">
                   <input id="onTime" type="number" min="0" />
@@ -330,7 +324,7 @@
       </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="libs/materialize.min.js"></script>
     <script>
       // Initialize WebSocket connection
       let ws;
@@ -583,8 +577,13 @@
           pumpOffStatus.style.display = "block";
           pumpOnStatus.style.display = "none";
           pumpCompletedStatus.style.display = "none";
-          document.getElementById("waitingMinutes").textContent =
-            data.secondsLeft + " sec";
+          if (data.minutesLeft > 0) {
+            document.getElementById("waitingMinutes").textContent =
+              data.minutesLeft + 1 + " minutes";
+          } else {
+            document.getElementById("waitingMinutes").textContent =
+              data.secondsLeft + " sec";
+          }
         } else if (data.status === "interval_completed") {
           pumpOffStatus.style.display = "none";
           pumpOnStatus.style.display = "none";
