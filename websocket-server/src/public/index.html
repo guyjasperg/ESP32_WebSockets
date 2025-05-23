@@ -246,7 +246,9 @@
                       </div>
                       <!-- When interval is completed -->
                       <div id="pumpCompletedStatus" style="display: none">
-                        <p class="green-text">Completed!</p>
+                        <p id="pumpCompletedStatusText" class="green-text">
+                          Completed!
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -577,17 +579,41 @@
           pumpOffStatus.style.display = "block";
           pumpOnStatus.style.display = "none";
           pumpCompletedStatus.style.display = "none";
-          if (data.minutesLeft > 0) {
-            document.getElementById("waitingMinutes").textContent =
-              data.minutesLeft + 1 + " minutes";
-          } else {
-            document.getElementById("waitingMinutes").textContent =
-              data.secondsLeft + " sec";
+
+          // Clear any previous timer
+          if (window.waitingTimer) {
+            clearInterval(window.waitingTimer);
           }
+
+          let timeLeft = data.timeLeftSeconds || 0;
+
+          function updateWaitingDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById(
+              "waitingMinutes"
+            ).textContent = `${minutes}:${seconds.toString().padStart(2, "0")}`;
+            if (timeLeft > 0) {
+              timeLeft--;
+            } else {
+              clearInterval(window.waitingTimer);
+            }
+          }
+
+          updateWaitingDisplay();
+          window.waitingTimer = setInterval(updateWaitingDisplay, 1000);
         } else if (data.status === "interval_completed") {
           pumpOffStatus.style.display = "none";
           pumpOnStatus.style.display = "none";
           pumpCompletedStatus.style.display = "block";
+          document.getElementById("pumpCompletedStatusText").textContent =
+            "Completed!";
+        } else if (data.status === "interval_stopped") {
+          pumpOffStatus.style.display = "none";
+          pumpOnStatus.style.display = "none";
+          pumpCompletedStatus.style.display = "block";
+          document.getElementById("pumpCompletedStatusText").textContent =
+            "Not Running...";
         }
       }
 
