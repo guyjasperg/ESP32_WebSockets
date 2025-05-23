@@ -1,0 +1,16 @@
+{
+  "name": "websocket-server",
+  "version": "1.0.0",
+  "description": "A simple WebSocket server using Node.js",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "ws": "^8.0.0"
+  },
+  "author": "",
+  "license": "ISC"
+}

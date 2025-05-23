@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>WebSocket Control Panel</title>
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        padding: 20px;
+      }
+      .container {
+        margin-top: 30px;
+      }
+      #messageForm {
+        margin-top: 20px;
+      }
+      .card {
+        padding: 10px;
+      }
+      .arcade-button {
+        display: inline-block;
+        cursor: pointer;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .button-outer {
+        width: 150px;
+        height: 150px;
+        background: #4caf50; /* Green by default */
+        border-radius: 50%;
+        box-shadow: 0 10px 0 #388e3c; /* Darker green shadow */
+        transition: all 0.1s ease;
+        position: relative;
+        transform: translateY(0);
+      }
+      .button-inner {
+        width: 140px;
+        height: 140px;
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        background: #66bb6a; /* Lighter green */
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .button-outer.red {
+        background: #ff4444;
+        box-shadow: 0 10px 0 #cc0000;
+      }
+      .button-inner.red {
+        background: #ff6666;
+      }
+      .button-inner i {
+        font-size: 50px;
+        color: white;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+      }
+      .arcade-button:active .button-outer {
+        transform: translateY(10px);
+        box-shadow: 0 0 0 #cc0000;
+      }
+      .button-pressed {
+        animation: buttonPress 0.2s ease;
+      }
+      @keyframes buttonPress {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(0.9);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      .pump-status {
+        font-size: 1.2rem;
+        font-weight: bold;
+      }
+      .pump-status.on {
+        color: #4caf50;
+      }
+      .pump-status.off {
+        color: #ff4444;
+      }
+
+      /* Responsive styles */
+      @media only screen and (max-width: 600px) {
+        .brand-logo {
+          font-size: 1.2rem !important; /* Smaller header text */
+        }
+
+        .container {
+          width: 100%;
+          padding: 0 10px;
+        }
+
+        .card-title {
+          font-size: 1.5rem;
+        }
+
+        /* Make arcade button bigger on mobile */
+        .button-outer {
+          width: 200px;
+          height: 200px;
+        }
+
+        .button-inner {
+          width: 190px;
+          height: 190px;
+        }
+
+        .button-inner i {
+          font-size: 80px; /* Bigger icon */
+        }
+
+        /* Bigger status text */
+        .pump-status {
+          font-size: 1.8rem;
+          margin: 20px 0;
+        }
+
+        /* Bigger select dropdown */
+        .browser-default {
+          font-size: 16px;
+          height: 48px;
+        }
+
+        /* Bigger buttons */
+        .btn {
+          height: 54px;
+          line-height: 54px;
+          font-size: 16px;
+          width: 100%; /* Full width buttons */
+          margin: 10px 0;
+        }
+
+        .btn i {
+          font-size: 24px;
+        }
+
+        /* Bigger textarea */
+        .materialize-textarea {
+          font-size: 16px !important;
+        }
+
+        /* Add some spacing */
+        .card {
+          margin: 15px 0;
+          padding: 15px;
+        }
+
+        .card-content {
+          padding: 12px !important;
+        }
+      }
+
+      /* Toast styles */
+      .toast {
+        justify-content: center !important;
+      }
+      #toast-container {
+        min-width: 10%;
+        bottom: 5% !important;
+        top: auto !important;
+        right: 50% !important;
+        transform: translateX(50%);
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="blue darken-3">
+      <div class="nav-wrapper container">
+        <span class="brand-logo">WebSocket Control Panel</span>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="row">
+        <div class="col s12">
+          <div class="card">
+            <div class="card-content">
+              <span class="card-title">Connected Clients</span>
+              <div class="input-field">
+                <select id="clientSelect" class="browser-default">
+                  <option value="" disabled selected>Choose a client</option>
+                </select>
+              </div>
+              <button
+                class="btn waves-effect waves-light"
+                onclick="refreshClients()"
+              >
+                <i class="material-icons left">refresh</i>Refresh
+              </button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-content">
+              <span class="card-title">Send Command</span>
+              <div class="input-field">
+                <textarea
+                  id="message"
+                  class="materialize-textarea"
+                  onkeypress="if(event.key === 'Enter') { event.preventDefault(); sendMessage(); }"
+                ></textarea>
+                <label for="message">Enter your command</label>
+              </div>
+              <button
+                class="btn waves-effect waves-light"
+                onclick="sendMessage()"
+              >
+                <i class="material-icons left">send</i>Send
+              </button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-content center-align">
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  gap: 10px;
+                  padding-bottom: 10px;
+                "
+              >
+                <h5 style="margin: 0">Pump State:</h5>
+                <p id="pumpStatus" class="pump-status" style="margin: 0">OFF</p>
+              </div>
+              <div class="arcade-button" onclick="handleArcadeClick()">
+                <div class="button-outer">
+                  <div class="button-inner">
+                    <i class="material-icons">power_settings_new</i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+      // Initialize WebSocket connection
+      let ws;
+
+      function connectWebSocket() {
+        ws = new WebSocket(
+          `ws://${window.location.hostname}:${window.location.port}`
+        );
+
+        ws.onopen = () => {
+          console.log("Connected to WebSocket server");
+          showToast("Connected to server", "green");
+
+          // Send identity as browser
+          ws.send(
+            JSON.stringify({
+              type: "identity",
+              data: JSON.stringify({
+                devicetype: "browser",
+              }),
+            })
+          );
+        };
+
+        ws.onclose = () => {
+          console.log("Disconnected from WebSocket server");
+          showToast("Connection lost. Reconnecting...", "orange");
+
+          // Try to reconnect after 3 seconds
+          setTimeout(connectWebSocket, 3000);
+        };
+
+        ws.onerror = (error) => {
+          console.error("WebSocket error:", error);
+          showToast("Connection error", "red");
+        };
+
+        ws.onmessage = (event) => {
+          const data = JSON.parse(event.data);
+          console.log("Received:", data);
+
+          if (data.type === "pumpStatus") {
+            updatePumpStatus(data.status);
+          } else if (data.type === "identity") {
+            console.log("Identity request received");
+          }
+        };
+      }
+
+      // Start connection when page loads
+      document.addEventListener("DOMContentLoaded", () => {
+        connectWebSocket();
+        M.AutoInit();
+      });
+
+      function refreshClients() {
+        fetch("/clients")
+          .then((res) => res.json())
+          .then((clients) => {
+            const select = document.getElementById("clientSelect");
+            select.innerHTML =
+              "<option value='' disabled selected>Choose a client</option>";
+            clients.forEach((clientId) => {
+              const option = document.createElement("option");
+              option.value = clientId;
+              option.text = `Client ${clientId}`;
+              select.appendChild(option);
+            });
+            M.FormSelect.init(select);
+          });
+      }
+
+      function sendMessage(message = "", bShowToast = true) {
+        console.log("Sending message:", message);
+        if (!message) {
+          message = document.getElementById("message").value;
+        }
+
+        const clientId = document.getElementById("clientSelect").value;
+        if (!clientId) {
+          M.toast({ html: "Please select a client", classes: "red" });
+          return false;
+        }
+
+        if (!message) {
+          if (bShowToast) {
+            M.toast({ html: "Please enter a command", classes: "red" });
+          }
+          return false;
+        }
+
+        fetch(`/send/${clientId}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ command: message }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (bShowToast) {
+              M.toast({
+                html: data.success ? "Message sent!" : "Error sending message",
+                classes: data.success ? "green" : "red",
+              });
+            }
+          });
+
+        return true;
+      }
+
+      function handleArcadeClick() {
+        const button = document.querySelector(".arcade-button");
+        const buttonOuter = button.querySelector(".button-outer");
+        const buttonInner = button.querySelector(".button-inner");
+        const isGreen = !buttonOuter.classList.contains("red");
+
+        button.classList.add("button-pressed");
+        setTimeout(() => {
+          button.classList.remove("button-pressed");
+        }, 100);
+
+        const result = sendMessage(isGreen ? "pump_on" : "pump_off", false);
+
+        if (!result) {
+          return;
+        }
+
+        // Toggle red class
+        buttonOuter.classList.toggle("red");
+        buttonInner.classList.toggle("red");
+
+        // Play arcade sound
+        //const audio = new Audio(
+        //  "data:audio/wav;base64,...existing base64 audio..."
+        //);
+        //audio.play();
+      }
+
+      function updatePumpStatus(status) {
+        const statusElement = document.getElementById("pumpStatus");
+        const buttonOuter = document.querySelector(".button-outer");
+        const buttonInner = document.querySelector(".button-inner");
+
+        statusElement.textContent = status;
+        statusElement.className = `pump-status ${status ? "on" : "off"}`;
+
+        if (status === "on") {
+          buttonOuter.classList.add("red");
+          buttonInner.classList.add("red");
+        } else {
+          buttonOuter.classList.remove("red");
+          buttonInner.classList.remove("red");
+        }
+      }
+
+      // Helper function for consistent toast display
+      function showToast(message, className = "green") {
+        M.toast({
+          html: message,
+          classes: className,
+          displayLength: 2000,
+          inDuration: 300,
+          outDuration: 375,
+        });
+      }
+
+      // Initial load
+      refreshClients();
+    </script>
+  </body>
+</html>

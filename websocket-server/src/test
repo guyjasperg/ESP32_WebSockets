@@ -1,0 +1,113 @@
+lo0: flags=8049<UP,LOOPBACK,RUNNING,MULTICAST> mtu 16384
+        options=1203<RXCSUM,TXCSUM,TXSTATUS,SW_TIMESTAMP>
+        inet 127.0.0.1 netmask 0xff000000
+        inet6 ::1 prefixlen 128 
+        inet6 fe80::1%lo0 prefixlen 64 scopeid 0x1 
+        nd6 options=201<PERFORMNUD,DAD>
+gif0: flags=8010<POINTOPOINT,MULTICAST> mtu 1280
+stf0: flags=0<> mtu 1280
+anpi0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
+        options=400<CHANNEL_IO>
+        ether 76:19:3a:21:08:d3
+        media: none
+        status: inactive
+anpi1: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
+        options=400<CHANNEL_IO>
+        ether 76:19:3a:21:08:d4
+        media: none
+        status: inactive
+en3: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
+        options=400<CHANNEL_IO>
+        ether 76:19:3a:21:08:b3
+        nd6 options=201<PERFORMNUD,DAD>
+        media: none
+        status: inactive
+en4: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
+        options=400<CHANNEL_IO>
+        ether 76:19:3a:21:08:b4
+        nd6 options=201<PERFORMNUD,DAD>
+        media: none
+        status: inactive
+en1: flags=8963<UP,BROADCAST,SMART,RUNNING,PROMISC,SIMPLEX,MULTICAST> mtu 1500
+        options=460<TSO4,TSO6,CHANNEL_IO>
+        ether 36:31:c6:02:ed:80
+        media: autoselect <full-duplex>
+        status: inactive
+en2: flags=8963<UP,BROADCAST,SMART,RUNNING,PROMISC,SIMPLEX,MULTICAST> mtu 1500
+        options=460<TSO4,TSO6,CHANNEL_IO>
+        ether 36:31:c6:02:ed:84
+        media: autoselect <full-duplex>
+        status: inactive
+ap1: flags=8843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST> mtu 1500
+        options=6460<TSO4,TSO6,CHANNEL_IO,PARTIAL_CSUM,ZEROINVERT_CSUM>
+        ether 32:bd:3a:6c:2b:66
+        inet6 fe80::30bd:3aff:fe6c:2b66%ap1 prefixlen 64 scopeid 0xa 
+        nd6 options=201<PERFORMNUD,DAD>
+        media: autoselect (<unknown type>)
+        status: inactive
+en0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
+        options=6460<TSO4,TSO6,CHANNEL_IO,PARTIAL_CSUM,ZEROINVERT_CSUM>
+        ether 10:bd:3a:6c:2b:66
+        inet6 fe80::10d6:40eb:d52c:b4d2%en0 prefixlen 64 secured scopeid 0xb 
+        inet6 2001:4454:15a:5a00:1862:e69f:75d4:ac82 prefixlen 64 autoconf secured 
+        inet6 2001:4454:15a:5a00:c64:9d01:c6b:d532 prefixlen 64 deprecated autoconf temporary 
+        inet 192.168.1.7 netmask 0xffffff00 broadcast 192.168.1.255
+        inet6 2001:4454:15a:5a00:ada4:5183:5761:46b8 prefixlen 64 deprecated autoconf temporary 
+        inet6 2001:4454:15a:5a00:979:1305:77a6:1058 prefixlen 64 deprecated autoconf temporary 
+        inet6 2001:4454:15a:5a00:21b6:584e:16a5:4461 prefixlen 64 autoconf temporary 
+        nd6 options=201<PERFORMNUD,DAD>
+        media: autoselect
+        status: active
+bridge0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
+        options=63<RXCSUM,TXCSUM,TSO4,TSO6>
+        ether 36:31:c6:02:ed:80
+        Configuration:
+                id 0:0:0:0:0:0 priority 0 hellotime 0 fwddelay 0
+                maxage 0 holdcnt 0 proto stp maxaddr 100 timeout 1200
+                root id 0:0:0:0:0:0 priority 0 ifcost 0 port 0
+                ipfilter disabled flags 0x0
+        member: en1 flags=3<LEARNING,DISCOVER>
+                ifmaxaddr 0 port 8 priority 0 path cost 0
+        member: en2 flags=3<LEARNING,DISCOVER>
+                ifmaxaddr 0 port 9 priority 0 path cost 0
+        nd6 options=201<PERFORMNUD,DAD>
+        media: <unknown type>
+        status: inactive
+awdl0: flags=8843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST> mtu 1500
+        options=6460<TSO4,TSO6,CHANNEL_IO,PARTIAL_CSUM,ZEROINVERT_CSUM>
+        ether 4a:be:96:ef:ae:29
+        inet6 fe80::48be:96ff:feef:ae29%awdl0 prefixlen 64 scopeid 0xd 
+        nd6 options=201<PERFORMNUD,DAD>
+        media: autoselect
+        status: active
+llw0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
+        options=400<CHANNEL_IO>
+        ether 4a:be:96:ef:ae:29
+        inet6 fe80::48be:96ff:feef:ae29%llw0 prefixlen 64 scopeid 0xe 
+        nd6 options=201<PERFORMNUD,DAD>
+        media: autoselect
+        status: inactive
+utun0: flags=8051<UP,POINTOPOINT,RUNNING,MULTICAST> mtu 1500
+        inet6 fe80::611:3aeb:4797:f791%utun0 prefixlen 64 scopeid 0xf 
+        nd6 options=201<PERFORMNUD,DAD>
+utun1: flags=8051<UP,POINTOPOINT,RUNNING,MULTICAST> mtu 1380
+        inet6 fe80::64d:3cbb:6a1:a01a%utun1 prefixlen 64 scopeid 0x10 
+        nd6 options=201<PERFORMNUD,DAD>
+utun2: flags=8051<UP,POINTOPOINT,RUNNING,MULTICAST> mtu 2000
+        inet6 fe80::f3ba:3ce3:561c:8496%utun2 prefixlen 64 scopeid 0x11 
+        nd6 options=201<PERFORMNUD,DAD>
+utun3: flags=8051<UP,POINTOPOINT,RUNNING,MULTICAST> mtu 1000
+        inet6 fe80::ce81:b1c:bd2c:69e%utun3 prefixlen 64 scopeid 0x12 
+        nd6 options=201<PERFORMNUD,DAD>
+utun4: flags=8051<UP,POINTOPOINT,RUNNING,MULTICAST> mtu 1380
+        inet6 fe80::8a85:281d:66d9:aa0c%utun4 prefixlen 64 scopeid 0x13 
+        nd6 options=201<PERFORMNUD,DAD>
+utun5: flags=8051<UP,POINTOPOINT,RUNNING,MULTICAST> mtu 1380
+        inet6 fe80::cc0:560c:beef:c186%utun5 prefixlen 64 scopeid 0x14 
+        nd6 options=201<PERFORMNUD,DAD>
+utun6: flags=8051<UP,POINTOPOINT,RUNNING,MULTICAST> mtu 1380
+        inet6 fe80::3ef6:3273:757d:8e43%utun6 prefixlen 64 scopeid 0x15 
+        nd6 options=201<PERFORMNUD,DAD>
+utun7: flags=8051<UP,POINTOPOINT,RUNNING,MULTICAST> mtu 1380
+        inet6 fe80::d474:51d3:2ae1:ecac%utun7 prefixlen 64 scopeid 0x16 
+        nd6 options=201<PERFORMNUD,DAD>
